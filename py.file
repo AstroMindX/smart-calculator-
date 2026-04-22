@@ -65,7 +65,7 @@ def show_history():
   if not history:
     print("No calculations in history yet.")
   else:
-    for item in history[1:]:
+    for item in history:
       print(item["equation"])
 
 def clear_history():
