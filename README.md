@@ -7,6 +7,7 @@ A Python-based calculator that supports multiple number operations with advanced
 - History tracting
 - Duplicate detection
 - Clean input system
+- Persistent history (saved to file)
 
 ## Tech Used
 - Python
