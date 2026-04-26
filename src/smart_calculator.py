@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-APP_VERSION = "4.0.0"
+APP_VERSION = "4.1.0"
 MAX_HISTORY = 10
 HISTORY_FILE = Path(__file__).resolve().parent.parent / "history.txt"
 
@@ -76,6 +76,7 @@ def is_duplicate(operation, numbers):
 
 
 def load_history():
+    history.clear()
     try:
         with open(HISTORY_FILE, "r", encoding="utf-8") as file:
             for line in file:
@@ -137,6 +138,7 @@ def print_menu():
 
 
 def main():
+    load_history()
     numbers = []
     while True:
         print_menu()
@@ -216,8 +218,6 @@ def main():
         else:
             print("Invalid choice. Try again")
 
-
-load_history()
 
 if __name__ == "__main__":
     main()
