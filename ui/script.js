@@ -1,4 +1,4 @@
-const UI_VERSION = "2.0.0";
+const UI_VERSION = "2.1.0";
 const MAX_HISTORY_ITEMS = 10;
 const STORAGE_KEY = "smart_calculator_ui_history";
 
@@ -57,11 +57,15 @@ function getInputs() {
   return { a, b, op: operationInput.value };
 }
 
+function showResult(message, isError = false) {
+  resultEl.textContent = `Result: ${message}`;
+  resultEl.className = isError ? "error" : "ok";
+}
+
 function calculate() {
   const input = getInputs();
   if (input.error) {
-    resultEl.textContent = `Result: ${input.error}`;
-    resultEl.className = "error";
+    showResult(input.error, true);
     return;
   }
 
@@ -84,8 +88,7 @@ function calculate() {
       break;
     case "div":
       if (b === 0) {
-        resultEl.textContent = "Result: Cannot divide by zero.";
-        resultEl.className = "error";
+        showResult("Cannot divide by zero.", true);
         return;
       }
       result = a / b;
@@ -96,14 +99,12 @@ function calculate() {
       equation = `${b}% of ${a}`;
       break;
     default:
-      resultEl.textContent = "Result: Unknown operation.";
-      resultEl.className = "error";
+      showResult("Unknown operation.", true);
       return;
   }
 
   const display = `${equation} = ${result}`;
-  resultEl.textContent = `Result: ${result}`;
-  resultEl.className = "ok";
+  showResult(result);
 
   const history = loadHistory();
   if (!history.includes(display)) {
@@ -123,13 +124,19 @@ function swapInputs() {
 function clearHistory() {
   localStorage.removeItem(STORAGE_KEY);
   renderHistory();
-  resultEl.textContent = "Result: History cleared.";
-  resultEl.className = "ok";
+  showResult("History cleared.");
 }
 
 calculateBtn.addEventListener("click", calculate);
 swapBtn.addEventListener("click", swapInputs);
 clearHistoryBtn.addEventListener("click", clearHistory);
+[num1Input, num2Input].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      calculate();
+    }
+  });
+});
 
 renderHistory();
 console.log(`Smart Calculator UI loaded (v${UI_VERSION})`);
