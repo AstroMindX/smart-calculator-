@@ -3,6 +3,7 @@ name: Deploy Smart Calculator UI
 on:
   push:
     branches: ["main", "work"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -12,6 +13,7 @@ permissions:
 
 concurrency:
   group: pages
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -31,6 +33,8 @@ jobs:
 
       - name: CLI smoke test
         run: python -m py_compile src/smart_calculator.py
+        run: |
+          python -m py_compile src/smart_calculator.py
 
       - name: Prepare Pages artifact
         run: |
@@ -48,6 +52,11 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
